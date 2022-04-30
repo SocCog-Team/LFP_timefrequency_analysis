@@ -47,7 +47,6 @@ lfp_tfa_states.SCP_ShowChoiceTargetsFirstGo = 1023;
 lfp_tfa_states.SCP_ShowChoiceTargetsBrightenFirst = 1025;
 lfp_tfa_states.SCP_ShowChoiceTargetsBrightenFirstFirstGo = 1026;
 lfp_tfa_states.SCP_ShowTrialTypeCue = 1027;
-lfp_tfa_states.SCP_END_ITI = 10011;
 lfp_tfa_states.SCP_A_HoldReleaseTime_ms = 11001;
 lfp_tfa_states.SCP_B_HoldReleaseTime_ms = 11002;
 lfp_tfa_states.SCP_A_InitialFixationTouchTime_ms = 11003;
@@ -72,4 +71,5 @@ lfp_tfa_states.SCP_FIRST_TargetTouchTime_ms = 11021;
 lfp_tfa_states.SCP_SECOND_TargetTouchTime_ms = 11022;
 lfp_tfa_states.SCP_FIRST_GoSignalTime_ms = 11023;
 lfp_tfa_states.SCP_SECOND_GoSignalTime_ms = 11024;
-% append this to the end of lfp_tfa's lfp_tfa_global_define_states.m, to define the new states/events
+
+
