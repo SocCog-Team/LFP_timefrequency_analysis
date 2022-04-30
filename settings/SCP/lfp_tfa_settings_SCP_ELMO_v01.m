@@ -77,7 +77,7 @@ lfp_tfa_cfg.info_filepath = fullfile('D:', 'SCP_DATA', 'SCP-CTRL-01', 'SESSIONLO
 % used for analysis
 %lfp_tfa_cfg.use_datasets = [31];
 lfp_tfa_cfg.use_datasets = [1];
-
+lfp_tfa_cfg.use_datasets = [2];% only channel 1 and 2
 
 % info about sessions to be analysed
 % should be a 1 x N struct, N = number of sessions to analyse
@@ -194,7 +194,7 @@ lfp_tfa_cfg.session_info(1) = ...
 %lfp_tfa_cfg.analyses = {'tfs', 'evoked', 'pow', 'sync', 'syncsp'}; %
 % start simple
 lfp_tfa_cfg.analyses = {'tfs', 'evoked', 'pow'}; %
-
+lfp_tfa_cfg.analyses = {'evoked', 'pow', 'tfs'}; %
 
 % targets to be included in the analysis
 % should be a cell array of strings which indicate the target names
@@ -251,7 +251,7 @@ lfp_tfa_cfg.random_seed = rng;
 lfp_tfa_cfg.analyse_states = {...
 	'single', lfp_tfa_states.SCP_A_InitialFixationOnsetTime_ms,		'IFTon',	-1.5,	1.5;...
 	'single', lfp_tfa_states.SCP_A_TargetOnsetTime_ms,				'CTon',		-1.5,	1.5; ...
-	'single', lfp_tfa_states.SCP_A_GoSignalTime_ms,					'A_Go',		-1.5,	1.5; ...
+	'single', lfp_tfa_states.SCP_A_GoSignalTime_ms,					'A_GOon',	-1.5,	1.5; ...
 	'single', lfp_tfa_states.SCP_A_InitialFixationReleaseTime_ms,	'A_IFTrel',	-1.5,	1.5; ...
 	};
 
@@ -280,7 +280,7 @@ lfp_tfa_cfg.analyse_states = {...
 lfp_tfa_cfg.analyse_epochs = {...
 	lfp_tfa_states.SCP_A_InitialFixationOnsetTime_ms,	'IFTon',	-1.5,	1.5;...
 	lfp_tfa_states.SCP_A_TargetOnsetTime_ms,			'CTon',		-1.5,	1.5; ...
-	lfp_tfa_states.SCP_A_GoSignalTime_ms,				'A_GO',		-1.5,	1.5; ...
+	lfp_tfa_states.SCP_A_GoSignalTime_ms,				'A_GOon',	-1.5,	1.5; ...
 	lfp_tfa_states.SCP_A_InitialFixationReleaseTime_ms,	'A_IFTrel',	-1.5,	1.5; ...
 	lfp_tfa_states.SCP_A_TargetTouchTime_ms,			'A_CTacq',	-1.5,	1.5; ...
 	lfp_tfa_states.SCP_A_RewardTrainOnsetTime_TDT_ms,	'A_REWon',	-1.5,	1.5; ...
@@ -315,7 +315,8 @@ lfp_tfa_cfg.error_measure = 'bootci';
 % and type = 2 separately
 % 2. lfp_tfa_cfg.compare.types = nan; Ignore trial type (trials with any
 % type value are combined)
-lfp_tfa_cfg.compare.types = [4];
+% lfp_tfa_cfg.compare.types = [4];
+lfp_tfa_cfg.compare.types = [2, 5];
 
 % effectors to be included in the analysis
 % should be a vector of integers specifying the effectors
@@ -326,7 +327,7 @@ lfp_tfa_cfg.compare.types = [4];
 % and effector = 6 separately
 % 2. lfp_tfa_cfg.compare.types = nan; Ignore effector (trials with any
 % effector value are combined)
-lfp_tfa_cfg.compare.effectors = [4];
+lfp_tfa_cfg.compare.effectors = [1];
 
 % which type of choice trials are to be included in the analysis
 % Examples:
@@ -351,7 +352,7 @@ lfp_tfa_cfg.compare.choice_trials = 1;
 % 4. lfp_tfa_cfg.compare.reach_hands = {'any'}; ignore hand label (trial with
 % any hand label is combined)
 %lfp_tfa_cfg.compare.reach_hands = {'L', 'R'};
-lfp_tfa_cfg.compare.reach_hands = {'R'};
+lfp_tfa_cfg.compare.reach_hands = {'L'};
 
 
 % reach space to be included for analysis
@@ -366,6 +367,10 @@ lfp_tfa_cfg.compare.reach_hands = {'R'};
 % 4. lfp_tfa_cfg.compare.reach_hands = {'any'}; ignore space label (trial with
 % any acquired target position is combined)
 lfp_tfa_cfg.compare.reach_spaces = {'L', 'R'};
+
+% 20220429sm: we need something like this for ph_LR_to_CI.m to do its thing
+lfp_tfa_cfg.contra_ipsi_relative_to = 'target';
+
 
 % hand space combinations to be excluded from analysis
 % should be a cell array with each element containing the hand and space
@@ -394,6 +399,8 @@ lfp_tfa_cfg.compare.exclude_handspace = {};
 % any perturbation value
 %lfp_tfa_cfg.compare.perturbations = [0, 1];
 lfp_tfa_cfg.compare.perturbations = [0];
+lfp_tfa_cfg.compare.perturbations = NaN;
+
 
 % differences in conditions to be analysed
 % add new entries for further difference calculations
@@ -419,7 +426,7 @@ lfp_tfa_cfg.diff_condition = {};
 % lfp_tfa_cfg.diff_condition(3) = {{'perturbation', {0, 1}, ...
 %     'choice', {0, 1}}};
 lfp_tfa_cfg.diff_condition(1) = {{'perturbation', {0, 1}}};
-lfp_tfa_cfg.diff_condition(3) = {{'type_eff', {[1 1], [4 1]}}};
+lfp_tfa_cfg.diff_condition(3) = {{'type_eff', {[2 1], [5 1]}}};
 
 
 % minimum number of trials per condition to be satisfied to consider a site
@@ -442,7 +449,9 @@ lfp_tfa_cfg.trialinfo = struct();
 % Example:
 % lfp_tfa_cfg.trialinfo.start_state = lfp_tfa_states.FIX_ACQ; reference for
 % trial start is the onset of fixation acquisition
-lfp_tfa_cfg.trialinfo.start_state = lfp_tfa_states.FIX_ACQ;
+% lfp_tfa_cfg.trialinfo.start_state = lfp_tfa_states.FIX_ACQ;
+%lfp_tfa_cfg.trialinfo.start_state = lfp_tfa_states.SCP_A_InitialFixationTouchTime_ms;
+lfp_tfa_cfg.trialinfo.start_state = lfp_tfa_states.SCP_ITI;
 
 % offset to be considered from the onset of
 % trial start reference state for calculating the trial start time
@@ -452,13 +461,14 @@ lfp_tfa_cfg.trialinfo.start_state = lfp_tfa_states.FIX_ACQ;
 % trial start time = onset time of lfp_tfa_cfg.trialinfo.start_state - 0.5;
 % 1. lfp_tfa_cfg.trialinfo.ref_tstart = 0.5;
 % trial start time = onset time of lfp_tfa_cfg.trialinfo.start_state + 0.5;
-lfp_tfa_cfg.trialinfo.ref_tstart = -0;
+lfp_tfa_cfg.trialinfo.ref_tstart = -0.5;
 
 % ID of the reference state which indicates end of a trial
 % Example:
 % lfp_tfa_cfg.trialinfo.end_state = lfp_tfa_states.TAR_HOL; reference for
 % trial start is the onset of target hold
-lfp_tfa_cfg.trialinfo.end_state = lfp_tfa_states.SUCCESS;
+% lfp_tfa_cfg.trialinfo.end_state = lfp_tfa_states.SUCCESS;
+lfp_tfa_cfg.trialinfo.end_state = lfp_tfa_states.SCP_END_ITI;
 
 % offset to be considered from the onset of
 % trial end reference state for calculating the trial end time
@@ -468,7 +478,8 @@ lfp_tfa_cfg.trialinfo.end_state = lfp_tfa_states.SUCCESS;
 % trial start time = onset time of lfp_tfa_cfg.trialinfo.end_state + 0.5;
 % 1. lfp_tfa_cfg.trialinfo.ref_tend = -0.5;
 % trial start time = onset time of lfp_tfa_cfg.trialinfo.end_state - 0.5;
-lfp_tfa_cfg.trialinfo.ref_tend = 0;
+% lfp_tfa_cfg.trialinfo.ref_tend = 0;
+lfp_tfa_cfg.trialinfo.ref_tend = 0.5;
 
 
 %% Settings for power spectrogram calculations
