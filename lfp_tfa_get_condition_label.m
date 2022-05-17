@@ -46,6 +46,7 @@ if isfield(cfg_condition, 'type')
             typs='F';
         case 2
             typ='Visually_guided';
+            typ='SoloA';
             typs='V';
         case 3
             typ='Memory';
@@ -55,7 +56,8 @@ if isfield(cfg_condition, 'type')
             typs='D';
         case 5
             typ='M2S';
-            typs='M2';
+            typ='Dyadic BoS';
+			typs='M2';
         case 6
             typ='S2S';
             typs='S2';

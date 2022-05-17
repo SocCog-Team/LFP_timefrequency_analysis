@@ -238,8 +238,13 @@ for i = 1:length(sites)
     [site_lfp.trials]=site_lfp.trials(to_keep);
     
     % Noise rejection
-    site_lfp = lfp_tfa_reject_noisy_lfp_trials( site_lfp, lfp_tfa_cfg.noise );
-    
+	% 20220502sm: honor lfp_tfa_cfg.noise.detect
+	if isfield(lfp_tfa_cfg, 'noise') && isfield(lfp_tfa_cfg.noise, 'detect') && (lfp_tfa_cfg.noise.detect == 1)
+		site_lfp = lfp_tfa_reject_noisy_lfp_trials( site_lfp, lfp_tfa_cfg.noise );
+	else
+		disp('Noise rejection was not requested, and will not be performed.');
+	end
+	
     % Baseline power calculation
     site_lfp = lfp_tfa_compute_site_baseline( site_lfp, session_info, lfp_tfa_cfg );
     

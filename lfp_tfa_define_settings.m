@@ -68,21 +68,38 @@ function lfp_tfa_cfg = lfp_tfa_define_settings(settings_filepath)
     lfp_tfa_cfg.results_folder = lfp_tfa_cfg.root_results_fldr;
     
     % folder to save LFP processing results
-    if ~lfp_tfa_cfg.process_LFP && ~exist(lfp_tfa_cfg.proc_lfp_folder, 'dir')
+	if ~lfp_tfa_cfg.process_LFP && ~exist(lfp_tfa_cfg.proc_lfp_folder, 'dir')
         lfp_tfa_cfg.process_LFP = true;
-    end
-    if lfp_tfa_cfg.process_LFP
-        lfp_tfa_cfg.proc_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'Processed LFP'];
-    end
-    % folder to save LFP analysis results
+	end
+	
+	%SM TODO: keep proc_lfp_folder from settings file?
+	%     if lfp_tfa_cfg.process_LFP
+	%         lfp_tfa_cfg.proc_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'Processed LFP'];
+	%     end
+	if lfp_tfa_cfg.process_LFP && isfield(lfp_tfa_cfg, 'proc_lfp_folder')
+		lfp_tfa_cfg.proc_lfp_folder = lfp_tfa_cfg.proc_lfp_folder;
+	else
+		lfp_tfa_cfg.proc_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'Processed LFP'];
+	end
+
+% folder to save LFP analysis results
     if ~lfp_tfa_cfg.compute_site_average && ~exist(lfp_tfa_cfg.analyse_lfp_folder, 'dir')
         lfp_tfa_cfg.compute_site_average = true;
-    end
-    %lfp_tfa_cfg.analyse_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'LFP Analysis'];
-    if lfp_tfa_cfg.compute_site_average
-        lfp_tfa_cfg.analyse_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'LFP Analysis'];
-    end
-    % folder to store LFP-LFP sync results
+	end
+	
+	%SM TODO: keep analyse_lfp_folder from settings file?
+	%lfp_tfa_cfg.analyse_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'LFP Analysis'];
+	%     if lfp_tfa_cfg.compute_site_average
+	% 		lfp_tfa_cfg.analyse_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'LFP Analysis'];
+	% 	end
+	if lfp_tfa_cfg.compute_site_average && isfield(lfp_tfa_cfg, 'analyse_lfp_folder')
+		lfp_tfa_cfg.analyse_lfp_folder = lfp_tfa_cfg.analyse_lfp_folder;
+	else
+		lfp_tfa_cfg.analyse_lfp_folder = [lfp_tfa_cfg.root_results_fldr filesep 'LFP Analysis'];
+	end
+	
+	
+	% folder to store LFP-LFP sync results
     lfp_tfa_cfg.lfp_sync_folder = [lfp_tfa_cfg.analyse_lfp_folder filesep 'Condition_based_Sync'];
     % folder to store session-wise analysis results
     for i = 1:length(lfp_tfa_cfg.session_info)

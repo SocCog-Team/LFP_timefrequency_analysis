@@ -14,7 +14,7 @@ lfp_tfa_cfg.results_folder = fullfile('D:', 'SCP_DATA', 'SCP-CTRL-01', 'SESSIONL
 % the results produced using this settings file would be saved under
 % the folder [lfp_tfa_cfg.results_folder, '\' lfp_tfa_cfg.version]
 % eg: 'Y:\Personal\Sarath\Results\LFP_TFA_Results\Linus_inactivation_8sessions'
-lfp_tfa_cfg.version = 'A_Elmo_B_HumanConfederates_Test';
+lfp_tfa_cfg.version = 'A_Elmo_B_HumanConfederates_NoNoiseRejection';
 
 % whether to calculate the LFP time frequency spectrograms and noise trial
 % detection
@@ -199,8 +199,6 @@ lfp_tfa_cfg.session_info(1) = ...
 % start simple
 lfp_tfa_cfg.analyses = {'tfs', 'evoked', 'pow'}; %
 lfp_tfa_cfg.analyses = {'evoked', 'pow', 'tfs'}; %
-lfp_tfa_cfg.analyses = {'tfs'}; %
-lfp_tfa_cfg.analyses = {'evoked', 'pow', 'tfs'}; %
 
 
 % targets to be included in the analysis
@@ -237,9 +235,11 @@ lfp_tfa_cfg.ref_hemisphere = 'R';
 lfp_tfa_cfg.random_seed = rng;
 
 % define the time windows to analyse for LFP TFR and evoked LFP response
-% Must be a Nx4 cell array, N = number of windows to analyse
+% Must be a Nx5 cell array, N = number of windows to analyse
 % Each row corresponds to one state and contain following elements
 % 1. single or combined might refer to the plot/aggregation type
+%	combined splits trials into instructed and choice and creates one plot
+%	for each
 % 2. Identifier of state around which the window is referenced,
 % see lfp_tfa_global_states, Example:  lfp_tfa_states.CUE_ON
 % 3. Name of the reference state (window) - string (used for labeling
@@ -261,7 +261,6 @@ lfp_tfa_cfg.analyse_states = {...
 	'single', lfp_tfa_states.SCP_A_GoSignalTime_ms,					'aGOon',	-0.2,	0.5; ...
 	'single', lfp_tfa_states.SCP_A_InitialFixationReleaseTime_ms,	'aIFTrel',	-0.7,	1.5; ...
 	};
-
 
 
 % define the epochs to analyse for LFP power spectrum
@@ -590,7 +589,7 @@ lfp_tfa_cfg.noise = [];
 % whether or not to apply noise rejection
 % Set to 0 to accept all trials
 % Set to 1 to run the noise trial detection methods
-lfp_tfa_cfg.noise.detect = 1;
+lfp_tfa_cfg.noise.detect = 0;
 % combination of methods to be used - future use
 % currently all methods are used together
 lfp_tfa_cfg.noise.methods = {'amp', 'std', 'diff', 'pow'};

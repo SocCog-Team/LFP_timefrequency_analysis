@@ -51,6 +51,10 @@ end
 concat_states_lfp = struct();
 for cnd = 1:length(cond_to_plot)
     
+	%20220506sm: skip out if cnd does not exists?
+	if size(evoked_lfp, 2) < cond_to_plot(cnd)
+		continue
+	end
     % loop through handspace
     for hs = 1:size(evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked, 2)
         if ~isempty([evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked(:,hs).lfp])% &&  ~isempty([evoked_lfp(:,hs).std])
