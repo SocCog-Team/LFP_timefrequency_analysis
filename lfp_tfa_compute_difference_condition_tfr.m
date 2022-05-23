@@ -339,10 +339,82 @@ for i = 1:length(diff_condition)/2
 					diff_tfr.difference(d).cfg_condition = lfp_tfr(d).cfg_condition;
 					diff_tfr.difference(d).cfg_condition.diff = 'spaces';
 					
+					
 					for st = 1:size(lfp_tfr(d).hs_tuned_tfs, 1) %st is windows here
 						%calculate difference between same hands,
 						%opposite space condition
 						if ismember(lfp_tfr(d).cfg_condition.effector,[1 2 3 4 6])
+							
+							
+							if size(lfp_tfr(d).hs_tuned_tfs, 2) == 1
+								continue
+							end
+							
+							% try to figure out which reach_hands were in
+							% use
+							unique_reach_hand_list = unique(lfp_tfr(d).cfg_condition.reach_hands);
+							n_reach_hands = length(unique_reach_hand_list);
+							
+							
+							% check for empty handpaces and fill with
+							% NaNed filled handspace data
+							empty_handspace_list = zeros([1, size(lfp_tfr(d).hs_tuned_tfs, 2)]);
+							for i_hand_reach_combos = 1 : size(lfp_tfr(d).hs_tuned_tfs, 2)
+								if isempty(lfp_tfr(d).hs_tuned_tfs(st, i_hand_reach_combos).freq)
+									empty_handspace_list(i_hand_reach_combos) = 1;
+								end
+							end
+							empty_handspace_idx = find(empty_handspace_list);
+							
+							hs_label_list = {'CH CS', 'CH CI', 'IH CS', 'IH IS'};
+							
+							nonempty_handspace_idx = find(empty_handspace_list == 0);
+							first_non_empty_handspace_idx = nonempty_handspace_idx(1);
+							if ~isempty(empty_handspace_idx)
+								for i_empty_handspace = 1 : length(empty_handspace_idx)
+									lfp_tfr(d).hs_tuned_tfs(st, empty_handspace_idx(i_empty_handspace)) = lfp_tfr(d).hs_tuned_tfs(st, first_non_empty_handspace_idx);
+									lfp_tfr(d).hs_tuned_tfs(st, empty_handspace_idx(i_empty_handspace)).hs_label = hs_label_list(empty_handspace_idx(i_empty_handspace));
+									lfp_tfr(d).hs_tuned_tfs(st, empty_handspace_idx(i_empty_handspace)).freq.powspctrm = lfp_tfr(d).hs_tuned_tfs(st, empty_handspace_idx(i_empty_handspace)).freq.powspctrm * NaN;
+								end
+							end
+							
+							if (n_reach_hands == 1)
+								disp(['Found only read_hand ', unique_reach_hand_list{1}, ' duplicating to ''fake'' the missing reach_hand for now.']);
+								
+								% 								if size(lfp_tfr(d).hs_tuned_tfs, 2) > 2
+								% 									% this should not happen, if only
+% 									% either CH or IH trials exist we
+% 									% assume their CS IS will be in 1 and 2
+% 									% respectively
+% 									keyboard
+% 								end								
+
+								% make sure to create the artifical data so
+								% the difference operation will work
+								lfp_tfr(d).hs_tuned_tfs(st, 3) =  lfp_tfr(d).hs_tuned_tfs(st, 1);
+								lfp_tfr(d).hs_tuned_tfs(st, 4) = lfp_tfr(d).hs_tuned_tfs(st, 2);
+								% adjust labels and NaN out the artificial
+								% data so the plots are easy to recognize
+								% as invalid
+								
+
+								
+								switch unique_reach_hand_list{1}
+									case 'C'
+										lfp_tfr(d).hs_tuned_tfs(st, 3).hs_label = {'IH CS'};
+										lfp_tfr(d).hs_tuned_tfs(st,3).freq.powspctrm = lfp_tfr(d).hs_tuned_tfs(st,3).freq.powspctrm * NaN;
+								
+										lfp_tfr(d).hs_tuned_tfs(st, 4).hs_label = {'IH IS'};
+										lfp_tfr(d).hs_tuned_tfs(st, 4).freq.powspctrm = lfp_tfr(d).hs_tuned_tfs(st,4).freq.powspctrm * NaN;
+									case 'I'
+										lfp_tfr(d).hs_tuned_tfs(st, 1).hs_label = {'CH CS'};
+										lfp_tfr(d).hs_tuned_tfs(st,1).freq.powspctrm = lfp_tfr(d).hs_tuned_tfs(st,1).freq.powspctrm * NaN;
+										
+										lfp_tfr(d).hs_tuned_tfs(st, 1).hs_label = {'CH IS'};
+										lfp_tfr(d).hs_tuned_tfs(st,2).freq.powspctrm = lfp_tfr(d).hs_tuned_tfs(st,2).freq.powspctrm * NaN;
+										
+								end
+							end
 							
 							ntimebins_CH = min([size(lfp_tfr(d).hs_tuned_tfs(st,1).freq.powspctrm, 3)...
 								size(lfp_tfr(d).hs_tuned_tfs(st,2).freq.powspctrm, 3)]);
@@ -377,6 +449,10 @@ for i = 1:length(diff_condition)/2
 							
 							if stat_test == true
 								for hs = 1:2
+									if (sum(isnan(diff_tfr.difference(d).hs_tuned_tfs(st, hs).freq.powspctrm(:)))) > 0
+										diff_tfr.difference(d).hs_tuned_tfs(st, hs).freq.stat_test.h = 0;
+										continue
+									end
 									% paired ttest
 									[~, p] = ttest(...
 										diff_tfr.difference(d).hs_tuned_tfs(st, hs).freq.powspctrm);
