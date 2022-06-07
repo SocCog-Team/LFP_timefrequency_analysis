@@ -55,9 +55,14 @@ for cnd = 1:length(cond_to_plot)
 	if size(evoked_lfp, 2) < cond_to_plot(cnd)
 		continue
 	end
+	
+	if ~isfield(evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked(:,hs), 'lfp')
+	
+	end	
+	
     % loop through handspace
     for hs = 1:size(evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked, 2)
-        if ~isempty([evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked(:,hs).lfp])% &&  ~isempty([evoked_lfp(:,hs).std])
+        if isfield(evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked(:,hs), 'lfp') && ~isempty([evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked(:,hs).lfp])% &&  ~isempty([evoked_lfp(:,hs).std])
             % concatenate states
             
             concat_states_lfp(cnd).mean = [];

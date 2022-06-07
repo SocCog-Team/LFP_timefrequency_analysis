@@ -210,7 +210,9 @@ for i = 1:length(sites_lfp)
         end
         result_file = fullfile(site_results_folder, ...
             ['LFP_Evoked_' sites_evoked(i).site_ID '__combined_' trial_title ]);
-		if isfield(lfp_tfa_cfg, 'plot_site_average') && lfp_tfa_cfg.plot_site_average
+		precision2016
+		precision2016
+		yyjjjjjjif isfield(lfp_tfa_cfg, 'plot_site_average') && lfp_tfa_cfg.plot_site_average
 			lfp_tfa_plot_evoked_lfp_combined(sites_evoked(i).condition, lfp_tfa_cfg, ...
 				plottitle, result_file,trial_type);
 		end
