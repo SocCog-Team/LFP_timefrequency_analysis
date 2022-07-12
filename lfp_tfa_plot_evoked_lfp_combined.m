@@ -56,9 +56,9 @@ for cnd = 1:length(cond_to_plot)
 		continue
 	end
 	
-	if ~isfield(evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked(:,hs), 'lfp')
-	
-	end	
+% 	if ~isfield(evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked(:,hs), 'lfp')
+% 	
+% 	end	
 	
     % loop through handspace
     for hs = 1:size(evoked_lfp(cond_to_plot(cnd)).hs_tuned_evoked, 2)

@@ -449,7 +449,7 @@ for i = 1:length(diff_condition)/2
 							
 							if stat_test == true
 								for hs = 1:2
-									if (sum(isnan(diff_tfr.difference(d).hs_tuned_tfs(st, hs).freq.powspctrm(:)))) > 0
+									if (sum(isnan(diff_tfr.difference(d).hs_tuned_tfs(st, hs).freq.powspctrm(:)))) > 0 || isempty(diff_tfr.difference(d).hs_tuned_tfs(st, hs).freq.powspctrm)
 										diff_tfr.difference(d).hs_tuned_tfs(st, hs).freq.stat_test.h = 0;
 										continue
 									end

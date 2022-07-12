@@ -202,25 +202,23 @@ for i = 1:length(sites_lfp)
         plottitle = ['Site ID: ', sites_evoked(i).site_ID ', Target = ' ...
             sites_evoked(i).target '(ref_' lfp_tfa_cfg.ref_hemisphere ') '];
         if trial_type == 1
-            plottitle = [plottitle 'Instructed trials'];
-            trial_title = 'Instructed trials';
-        elseif trial_type == 2
-            plottitle = [plottitle 'Choice trials'];
-            trial_title = 'Choice trials';
-        end
-        result_file = fullfile(site_results_folder, ...
-            ['LFP_Evoked_' sites_evoked(i).site_ID '__combined_' trial_title ]);
-		precision2016
-		precision2016
-		yyjjjjjjif isfield(lfp_tfa_cfg, 'plot_site_average') && lfp_tfa_cfg.plot_site_average
+			plottitle = [plottitle 'Instructed trials'];
+			trial_title = 'Instructed trials';
+		elseif trial_type == 2
+			plottitle = [plottitle 'Choice trials'];
+			trial_title = 'Choice trials';
+		end
+		result_file = fullfile(site_results_folder, ...
+			['LFP_Evoked_' sites_evoked(i).site_ID '__combined_' trial_title ]);
+		if isfield(lfp_tfa_cfg, 'plot_site_average') && lfp_tfa_cfg.plot_site_average
 			lfp_tfa_plot_evoked_lfp_combined(sites_evoked(i).condition, lfp_tfa_cfg, ...
 				plottitle, result_file,trial_type);
 		end
-    end
-    
-    %%
-    
-    close all;
+	end
+	
+	%%
+	
+	close all;
 end
 
 % Average across sites for a session
